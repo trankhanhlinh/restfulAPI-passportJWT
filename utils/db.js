@@ -32,7 +32,7 @@ module.exports = {
 
       connection.connect(function(err) {
         if (err) throw err;
-        console.log('Connected!');
+        console.log('Database connected!');
       });
 
       var sqlinsert = `insert into ${tablename} set ?`;

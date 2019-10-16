@@ -13,6 +13,5 @@ module.exports.findOneById = userId => {
 };
 
 module.exports.addOne = user => {
-  console.log('add user');
   return db.add('users', user);
 };
