@@ -10,7 +10,7 @@ module.exports.postRegister = (req, res, next) => {
 
   UsersModel.addOne(newUser)
     .then(newUserId => {
-      res.send(newUserId.toString());
+      res.send({ message: 'successfully create new user', userId: newUserId });
     })
     .catch(err => {
       res.send(err);
@@ -33,7 +33,7 @@ module.exports.postLogin = (req, res, next) => {
 
       const token = jwt.sign(JSON.stringify(user), 'your_jwt_secret');
 
-      return res.json({ user, token });
+      return res.json(token);
     });
   })(req, res);
 };

@@ -14,13 +14,13 @@ passport.use(
     function(username, password, done) {
       //this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
       return UsersModel.findOne({ username, password })
-        .then(user => {
-          if (!user) {
+        .then(users => {
+          if (!users || users.length === 0) {
             return done(null, false, {
               message: 'Incorrect email or password.'
             });
           }
-          return done(null, user[0], { message: 'Logged In Successfully' });
+          return done(null, users[0], { message: 'Logged In Successfully' });
         })
         .catch(err => done(err));
     }
@@ -36,8 +36,12 @@ passport.use(
     function(jwtPayload, done) {
       //find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
       return UsersModel.findOneById(jwtPayload.ID)
-        .then(user => {
-          return done(null, user);
+        .then(users => {
+          var userInfo = {
+            ID: users[0].ID,
+            USERNAME: users[0].USERNAME
+          };
+          return done(null, userInfo);
         })
         .catch(err => {
           return done(err);
