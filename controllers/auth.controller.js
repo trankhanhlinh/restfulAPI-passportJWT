@@ -8,9 +8,22 @@ module.exports.postRegister = (req, res, next) => {
     PASSWORD: req.body.PASSWORD
   };
 
-  UsersModel.addOne(newUser)
-    .then(newUserId => {
-      res.send({ message: 'successfully create new user', userId: newUserId });
+  UsersModel.checkIfExisted(newUser.USERNAME)
+    .then(users => {
+      if (users.length === 0) {
+        UsersModel.addOne(newUser)
+          .then(newUserId => {
+            res.send({
+              message: 'successfully create new user',
+              userId: newUserId
+            });
+          })
+          .catch(err => {
+            res.send(err);
+          });
+      } else {
+        res.send({ message: 'user is existed', username: newUser.USERNAME });
+      }
     })
     .catch(err => {
       res.send(err);

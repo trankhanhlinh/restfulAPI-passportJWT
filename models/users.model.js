@@ -8,6 +8,14 @@ module.exports.findOne = user => {
   );
 };
 
+module.exports.checkIfExisted = username => {
+  return db.load(
+    `SELECT *
+    FROM users
+    WHERE USERNAME = '${username}'`
+  );
+};
+
 module.exports.findOneById = userId => {
   return db.load(`SELECT * FROM users WHERE ID = ${userId}`);
 };
