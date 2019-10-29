@@ -50,7 +50,7 @@ module.exports.postLogin = (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err || !user) {
       return res.status(403).json({
-        message: info.message,
+        message: info ? info.message : err,
         user: user
       });
     }
@@ -80,7 +80,7 @@ module.exports.googleOAuth = (req, res, next) => {
     (err, user, info) => {
       if (err || !user) {
         return res.status(403).json({
-          message: info.message,
+          message: info ? info.message : err,
           user: user
         });
       }
