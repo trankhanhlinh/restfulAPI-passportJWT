@@ -74,19 +74,24 @@ module.exports.facebookOAuth = (req, res, next) => {
 };
 
 module.exports.googleOAuth = (req, res, next) => {
-  passport.authenticate(
-    'google-plus-token',
-    { session: false },
-    (err, user, info) => {
-      if (err || !user) {
-        return res.status(403).json({
-          message: info ? info.message : err,
-          user: user
-        });
-      }
-
-      const token = signToken(user);
-      return res.status(200).json({ token });
-    }
-  )(req, res);
+  const token = signToken(req.user);
+  return res.status(200).json({ token });
 };
+
+// module.exports.googleOAuth = (req, res, next) => {
+//   passport.authenticate(
+//     'google-plus-token',
+//     { session: false },
+//     (err, user, info) => {
+//       if (err || !user) {
+//         return res.status(403).json({
+//           message: info ? info.message : err,
+//           user: user
+//         });
+//       }
+
+//       const token = signToken(user);
+//       return res.status(200).json({ token });
+//     }
+//   )(req, res);
+// };

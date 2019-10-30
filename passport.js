@@ -2,6 +2,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookTokenStrategy = require('passport-facebook-token');
 const GooglePlusTokenStrategy = require('passport-google-plus-token');
+const GoogleTokenStrategy = require('passport-google-token').Strategy;
 const passportJWT = require('passport-jwt');
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
@@ -74,6 +75,42 @@ passport.use(
       passReqToCallback: true
     },
     function(req, accessToken, refreshToken, profile, cb) {
+      console.log('google');
+      console.log('access token', accessToken);
+      console.log('profile', profile);
+      UsersModel.checkIfExisted(profile.id)
+        .then(users => {
+          if (!users || users.length === 0) {
+            var newUser = {
+              USERNAME: profile.id,
+              PASSWORD: 'Google'
+            };
+            UsersModel.addOne(newUser)
+              .then(newUserId => {
+                newUser.ID = newUserId;
+                return cb(null, newUser);
+              })
+              .catch(err => {
+                return cb(err, false, err.message);
+              });
+          } else {
+            return cb(null, users[0]);
+          }
+        })
+        .catch(err => {
+          return cb(err, false, err.message);
+        });
+    }
+  )
+);
+
+passport.use(
+  new GoogleTokenStrategy(
+    {
+      clientID: config.oauth.google.clientID,
+      clientSecret: config.oauth.google.clientSecret
+    },
+    function(accessToken, refreshToken, profile, cb) {
       console.log('google');
       console.log('access token', accessToken);
       console.log('profile', profile);

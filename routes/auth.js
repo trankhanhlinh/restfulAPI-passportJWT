@@ -13,6 +13,12 @@ router.post(
   authController.facebookOAuth
 );
 
-router.post('/oauth/google', authController.googleOAuth);
+//router.post('/oauth/google', authController.googleOAuth);
+
+router.post(
+  '/oauth/google',
+  passport.authenticate('google-token', { session: false }),
+  authController.googleOAuth
+);
 
 module.exports = router;
