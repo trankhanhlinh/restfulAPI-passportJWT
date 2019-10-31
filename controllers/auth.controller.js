@@ -35,9 +35,11 @@ module.exports.postRegister = (req, res, next) => {
             res.status(400).json({ message: err.message });
           });
       } else {
-        res.status(403).json({
-          message: 'Username already exists.',
-          username: newUser.USERNAME
+        res.status(403).send({
+          error: {
+            message: 'Username already exists.',
+            username: newUser.USERNAME
+          }
         });
       }
     })
@@ -49,9 +51,11 @@ module.exports.postRegister = (req, res, next) => {
 module.exports.postLogin = (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err || !user) {
-      return res.status(403).json({
-        message: info ? info.message : err,
-        user: user
+      return res.status(403).send({
+        error: {
+          message: info ? info.message : err,
+          user: user
+        }
       });
     }
 
