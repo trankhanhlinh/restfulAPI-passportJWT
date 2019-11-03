@@ -10,5 +10,6 @@ module.exports = {
         '72475427681-3chf7ih6ld8ma5p9h2qruatkr254i1m7.apps.googleusercontent.com',
       clientSecret: 'gJNMxTagp4sDIszvEyxpUM_-'
     }
-  }
+  },
+  saltRounds: 10
 };

@@ -8,6 +8,7 @@ const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 const UsersModel = require('./models/users.model');
 const config = require('./configuration');
+const bcrypt = require('bcrypt');
 
 passport.use(
   new LocalStrategy(
@@ -17,14 +18,23 @@ passport.use(
     },
     function(username, password, cb) {
       //this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
-      return UsersModel.findOne({ username, password })
+      return UsersModel.checkIfExisted(username)
         .then(users => {
           if (!users || users.length === 0) {
             return cb(null, false, {
-              message: 'Incorrect email or password.'
+              message: 'Incorrect username.'
             });
           }
-          return cb(null, users[0]);
+
+          var user = users[0];
+          var ret = bcrypt.compareSync(password, users[0].PASSWORD);
+          if (ret) {
+            return cb(null, user);
+          }
+
+          return cb(null, false, {
+            message: 'Incorrect password.'
+          });
         })
         .catch(err => cb(err, false, { message: err.message }));
     }
@@ -46,7 +56,11 @@ passport.use(
           if (!users || users.length === 0) {
             var newUser = {
               USERNAME: profile.id,
-              PASSWORD: 'Facebook'
+              PASSWORD: profile.provider,
+              FIRSTNAME: profile.name.givenName,
+              LASTNAME: profile.name.familyName + ' ' + profile.name.middleName,
+              AVATAR: profile.photos[0].value,
+              EMAIL: profile.emails[0].value
             };
             UsersModel.addOne(newUser)
               .then(newUserId => {
@@ -83,7 +97,11 @@ passport.use(
           if (!users || users.length === 0) {
             var newUser = {
               USERNAME: profile.id,
-              PASSWORD: 'Google'
+              PASSWORD: profile.provider,
+              FIRSTNAME: profile.name.givenName,
+              LASTNAME: profile.name.familyName,
+              AVATAR: profile._json.picture,
+              EMAIL: profile.emails[0].value
             };
             UsersModel.addOne(newUser)
               .then(newUserId => {
@@ -119,7 +137,11 @@ passport.use(
           if (!users || users.length === 0) {
             var newUser = {
               USERNAME: profile.id,
-              PASSWORD: 'Google'
+              PASSWORD: profile.provider,
+              FIRSTNAME: profile.name.givenName,
+              LASTNAME: profile.name.familyName,
+              AVATAR: profile._json.picture,
+              EMAIL: profile.emails[0].value
             };
             UsersModel.addOne(newUser)
               .then(newUserId => {
@@ -150,11 +172,7 @@ passport.use(
       //find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
       return UsersModel.findOneById(jwtPayload.userInfo.ID)
         .then(users => {
-          var userInfo = {
-            ID: users[0].ID,
-            USERNAME: users[0].USERNAME
-          };
-          return done(null, userInfo);
+          return done(null, users[0]);
         })
         .catch(err => {
           return done(err);

@@ -1,13 +1,14 @@
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const UsersModel = require('../models/users.model');
-const { JWT_SECRET } = require('../configuration');
+const { JWT_SECRET, saltRounds } = require('../configuration');
+const bcrypt = require('bcrypt');
 
 signToken = user => {
   return jwt.sign(
     {
       iss: 'Omy',
-      userInfo: { ID: user.ID },
+      userInfo: { ID: user.ID, USERNAME: user.USERNAME },
       iat: new Date().getTime()
     },
     JWT_SECRET
@@ -15,9 +16,17 @@ signToken = user => {
 };
 
 module.exports.postRegister = (req, res, next) => {
+  var hashPassword = bcrypt.hashSync(req.body.PASSWORD, saltRounds);
+  var avatar =
+    'https://cdn.pixabay.com/photo/2016/11/18/23/38/child-1837375_960_720.png';
+
   var newUser = {
     USERNAME: req.body.USERNAME,
-    PASSWORD: req.body.PASSWORD
+    PASSWORD: hashPassword,
+    FIRSTNAME: req.body.FIRSTNAME,
+    LASTNAME: req.body.LASTNAME || '',
+    AVATAR: avatar,
+    EMAIL: req.body.EMAIL
   };
 
   UsersModel.checkIfExisted(newUser.USERNAME)
