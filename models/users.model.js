@@ -25,6 +25,10 @@ module.exports.addOne = user => {
   return db.add('users', user);
 };
 
+module.exports.updateOne = user => {
+  return db.update('users', 'ID', user);
+};
+
 //Hàm trả về thời gian hiện tại
 function getDateNow() {
   var today = new Date();
