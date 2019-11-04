@@ -26,3 +26,17 @@ module.exports.postUpdateInfo = (req, res, next) => {
     })
     .catch(err => res.send(err));
 };
+
+module.exports.postUpdateAvatar = (req, res, next) => {
+  if (!req.file) {
+    res.status(403).json({
+      message: 'File is null or undefined.'
+    });
+    return next(err);
+  }
+  res.status(200).json({
+    fileUrl:
+      'https://restfulapi-passport-jwt.herokuapp.com/images/' +
+      req.file.filename
+  });
+};
