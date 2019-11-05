@@ -9,8 +9,6 @@ app.use(cors());
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-server.listen(process.env.PORT || 8080);
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
