@@ -8,7 +8,7 @@ const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 const UsersModel = require('./models/users.model');
 const config = require('./configuration');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 
 passport.use(
   new LocalStrategy(
@@ -27,14 +27,14 @@ passport.use(
           }
 
           var user = users[0];
-          var ret = bcrypt.compareSync(password, users[0].PASSWORD);
-          if (ret) {
-            return cb(null, user);
-          }
+          // var ret = bcrypt.compareSync(password, users[0].PASSWORD);
+          // if (ret) {
+          return cb(null, user);
+          // }
 
-          return cb(null, false, {
-            message: 'Incorrect password.'
-          });
+          // return cb(null, false, {
+          //   message: 'Incorrect password.'
+          // });
         })
         .catch(err => cb(err, false, { message: err.message }));
     }

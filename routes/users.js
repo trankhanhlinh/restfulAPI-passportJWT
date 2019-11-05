@@ -33,14 +33,11 @@ router.get('/', passport.authenticate('jwt', { session: false }), function(
 
 router.post('/update', usersController.postUpdateInfo);
 router.post(
-  '/avatar/upload',
+  '/upload-avatar',
   upload.single('avatar'),
   usersController.postUploadAvatar
 );
-router.post(
-  '/avatar/update',
-  usersController.postUpdateAvatar
-);
-router.post('/update/password', usersController.postUpdatePassword);
+// router.post('/avatar/update', usersController.postUpdateAvatar);
+// router.post('/update/password', usersController.postUpdatePassword);
 
 module.exports = router;
