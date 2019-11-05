@@ -49,7 +49,7 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-const clients = {};
+var clients = {};
 const addClient = socket => {
   console.log('New client connected', socket.id);
   clients[socket.id] = socket;
@@ -59,7 +59,8 @@ const removeClient = socket => {
   delete clients[socket.id];
 };
 
-io.sockets.on('connection', socket => {
+io.on('connection', socket => {
+  console.log('socket io is sconnected');
   let id = socket.id;
 
   addClient(socket);
@@ -116,6 +117,7 @@ function getOpponent(socket) {
 }
 
 io.on('connection', function(socket) {
+  console.log('socket io is sconnected');
   joinGame(socket);
 
   // Once the socket has an opponent, we can begin the game
