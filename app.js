@@ -5,10 +5,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
-
 app.use(cors());
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
+server.listen(process.env.PORT || 8080);
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
