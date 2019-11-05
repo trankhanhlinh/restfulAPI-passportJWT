@@ -27,7 +27,7 @@ module.exports.postUpdateInfo = (req, res, next) => {
     .catch(err => res.send(err));
 };
 
-module.exports.postUpdateAvatar = (req, res, next) => {
+module.exports.postUploadAvatar = (req, res, next) => {
   if (!req.file) {
     res.status(403).json({
       message: 'File is null or undefined.'
@@ -39,4 +39,26 @@ module.exports.postUpdateAvatar = (req, res, next) => {
       'https://restfulapi-passport-jwt.herokuapp.com/images/' +
       req.file.filename
   });
+};
+
+module.exports.postUpdateAvatar = (req, res, next) => {
+  UsersModel.checkIfExisted(req.body.USERNAME)
+    .then(users => {
+      var updatedUser = {
+        ID: users[0].ID,
+        AVATAR: req.body.AVATAR
+      };
+
+      UsersModel.updateOne(updatedUser)
+        .then(changedRows => {
+          res.status(200).json({
+            message: 'Successfully update user\'s avatar.',
+            user: updatedUser
+          });
+        })
+        .catch(err => {
+          res.send({ message: 'Failed to update user\'s avatar.' });
+        });
+    })
+    .catch(err => res.send(err));
 };

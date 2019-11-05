@@ -33,8 +33,12 @@ router.get('/', passport.authenticate('jwt', { session: false }), function(
 
 router.post('/update', usersController.postUpdateInfo);
 router.post(
-  '/update-avatar',
+  '/avatar/upload',
   upload.single('avatar'),
+  usersController.postUploadAvatar
+);
+router.post(
+  '/avatar/update',
   usersController.postUpdateAvatar
 );
 
