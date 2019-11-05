@@ -5,10 +5,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-
-server.listen(80);
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
 
 app.use(cors());
 app.use(logger('dev'));
