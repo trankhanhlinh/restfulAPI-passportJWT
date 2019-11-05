@@ -6,12 +6,18 @@ module.exports.postUpdateInfo = (req, res, next) => {
   //Trường hợp cập nhật thông tin cá nhân không bao gồm hình ảnh
   UsersModel.checkIfExisted(req.body.USERNAME)
     .then(users => {
+      let newAvatar = '';
+      if (req.body.AVATAR) {
+        newAvatar = req.body.AVATAR;
+      } else {
+        newAvatar = users[0].AVATAR;
+      }
       var updatedUser = {
         ID: users[0].ID,
         FIRSTNAME: req.body.FIRSTNAME,
         LASTNAME: req.body.LASTNAME,
         EMAIL: req.body.EMAIL,
-        AVATAR: req.body.AVATAR
+        AVATAR: newAvatar
       };
 
       UsersModel.updateOne(updatedUser)
