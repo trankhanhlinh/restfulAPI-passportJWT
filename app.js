@@ -9,6 +9,13 @@ app.use(cors());
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
+io.origins((origin, callback) => {
+  if (origin !== 'https://restfulapi-passport-jwt.herokuapp.com') {
+    return callback('origin not allowed', false);
+  }
+  callback(null, true);
+});
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
