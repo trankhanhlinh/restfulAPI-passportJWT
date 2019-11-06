@@ -38,6 +38,6 @@ router.post(
   usersController.postUploadAvatar
 );
 // router.post('/avatar/update', usersController.postUpdateAvatar);
-// router.post('/update/password', usersController.postUpdatePassword);
+router.post('/update-password', usersController.postUpdatePassword);
 
 module.exports = router;
