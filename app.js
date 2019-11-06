@@ -136,6 +136,9 @@ io.on('connection', function(socket) {
 
   // Emit an event to the opponent when the player leaves
   socket.on('disconnect', function() {
+    if (unmatched === socket.id) {
+      unmatched = null;
+    }
     if (getOpponent(socket)) {
       getOpponent(socket).emit('opponent.left');
     }
