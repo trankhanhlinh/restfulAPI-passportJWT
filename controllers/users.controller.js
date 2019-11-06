@@ -1,6 +1,6 @@
 const UsersModel = require('../models/users.model');
 const { saltRounds } = require('../configuration');
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 module.exports.postUpdateInfo = (req, res, next) => {
   //Trường hợp cập nhật thông tin cá nhân không bao gồm hình ảnh
