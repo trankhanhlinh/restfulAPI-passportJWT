@@ -75,13 +75,13 @@ module.exports.postUploadAvatar = (req, res, next) => {
 module.exports.postUpdatePassword = (req, res, next) => {
   UsersModel.checkIfExisted(req.body.USERNAME)
     .then(users => {
+      var hashNewPassword = bcrypt.hashSync(req.body.NEW_PASSWORD, saltRounds);
       var currentPassword = req.body.CUR_PASSWORD;
-      var newPassword = req.body.NEW_PASSWORD;
       var ret = bcrypt.compareSync(currentPassword, users[0].PASSWORD);
       if (ret) {
         var updatedUser = {
           ID: users[0].ID,
-          PASSWORD: newPassword
+          PASSWORD: hashNewPassword
         };
 
         UsersModel.updateOne(updatedUser)
