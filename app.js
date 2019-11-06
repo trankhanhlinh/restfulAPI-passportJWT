@@ -48,7 +48,7 @@ const removeClient = socket => {
 };
 
 io.on('connection', socket => {
-  console.log('socket io is sconnected');
+  console.log('socket io is first connected');
   let id = socket.id;
 
   addClient(socket);
@@ -68,6 +68,8 @@ var players = {},
   unmatched;
 
 function joinGame(socket) {
+  console.log('socket join game ', socket.id);
+  console.log('socket unmatched ', unmatched);
   // Add the player to our object of players
   players[socket.id] = {
     // The opponent will either be the socket that is
@@ -105,11 +107,13 @@ function getOpponent(socket) {
 }
 
 io.on('connection', function(socket) {
-  console.log('socket io is sconnected');
+  console.log('socket io is really connected');
   joinGame(socket);
 
   // Once the socket has an opponent, we can begin the game
   if (getOpponent(socket)) {
+    console.log('opponent socket ', getOpponent(socket).id, socket.id);
+    console.log('game begin');
     socket.emit('game.begin', {
       symbol: players[socket.id].symbol
     });
