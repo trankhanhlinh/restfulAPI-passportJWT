@@ -2,23 +2,13 @@ var createError = require('http-errors');
 var express = require('express');
 var cors = require('cors');
 var path = require('path');
+const port = process.env.PORT || 8080;
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var app = express();
 app.use(cors());
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-// var io = require('socket.io')(server, {
-//   handlePreflightRequest: (req, res) => {
-//     const headers = {
-//       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-//       'Access-Control-Allow-Origin': req.headers.origin, //or the specific origin you want to give access to,
-//       'Access-Control-Allow-Credentials': true
-//     };
-//     res.writeHead(200, headers);
-//     res.end();
-//   }
-// });
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -46,8 +36,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-module.exports = app;
 
 var clients = {};
 const addClient = socket => {
@@ -149,3 +137,9 @@ io.on('connection', function(socket) {
     }
   });
 });
+
+server.listen(port, function() {
+  console.log('listening on localhost:', port);
+});
+
+module.exports = app;
